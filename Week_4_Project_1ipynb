@@ -1,0 +1,399 @@
+{
+ "cells": [
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "## IS 362 Project 1\n",
+    "### By Alexander Doler and Jake Kwok"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "In the first cell we load the csv file containing the data that we may work with it. We then add the column name \"Airline\", which was not included in the CSV. We then print out the object type of our \"airliners\" dataframe to show that it is indeed a dataframe."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 147,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "   Airline   Status   LA   PHX  Sandiego  SanFran  Seattle\n",
+      "0   Alaska  On Time  497   221       212      503     1841\n",
+      "1   Alaska  Delayed   62    12        20      102      305\n",
+      "2  AM West  On Time  694  4840       383      320      201\n",
+      "3  AM West  Delayed  117   415        65      129       61\n",
+      "\n",
+      " Object type:\n",
+      "<class 'pandas.core.frame.DataFrame'>\n"
+     ]
+    }
+   ],
+   "source": [
+    "import pandas as pd\n",
+    "\n",
+    "airliners = pd.DataFrame(pd.read_csv(\"airliners.csv\", usecols=[0, 1, 2, 3, 4, 5, 6]))\n",
+    "airliners = airliners.rename(columns={'Unnamed: 0': 'Airline'})\n",
+    "\n",
+    "print(airliners)\n",
+    "print(\"\\n Object type:\")\n",
+    "print(type(airliners))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "In this cell we set each row in the dataframe as its own series object so that we may easily access this data and manipulate it."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 142,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Airline      Alaska\n",
+      "Status      On Time\n",
+      "LA              497\n",
+      "PHX             221\n",
+      "Sandiego        212\n",
+      "SanFran         503\n",
+      "Seattle        1841\n",
+      "Name: 0, dtype: object\n",
+      "\n",
+      "\n",
+      "Airline      Alaska\n",
+      "Status      Delayed\n",
+      "LA               62\n",
+      "PHX              12\n",
+      "Sandiego         20\n",
+      "SanFran         102\n",
+      "Seattle         305\n",
+      "Name: 1, dtype: object\n",
+      "\n",
+      "\n",
+      "Airline     AM West\n",
+      "Status      On Time\n",
+      "LA              694\n",
+      "PHX            4840\n",
+      "Sandiego        383\n",
+      "SanFran         320\n",
+      "Seattle         201\n",
+      "Name: 2, dtype: object\n",
+      "\n",
+      "\n",
+      "Airline     AM West\n",
+      "Status      Delayed\n",
+      "LA              117\n",
+      "PHX             415\n",
+      "Sandiego         65\n",
+      "SanFran         129\n",
+      "Seattle          61\n",
+      "Name: 3, dtype: object\n"
+     ]
+    }
+   ],
+   "source": [
+    "alaskaOnTime = pd.Series(airliners.loc[0])\n",
+    "alaskaDelayed = pd.Series(airliners.loc[1])\n",
+    "amwestOnTime = pd.Series(airliners.loc[2])\n",
+    "amwestDelayed = pd.Series(airliners.loc[3])\n",
+    "\n",
+    "print(alaskaOnTime)\n",
+    "print(\"\\n\")\n",
+    "print(alaskaDelayed)\n",
+    "print(\"\\n\")\n",
+    "print(amwestOnTime)\n",
+    "print(\"\\n\")\n",
+    "print(amwestDelayed)"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "In this cell, using the series objects set previously, we sum up the items in each row to get the total number of delayed and on-time flights for each airline. We then add the total flights and add this number as a new \"Total\" column to the dataframe."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 143,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>Airline</th>\n",
+       "      <th>Status</th>\n",
+       "      <th>LA</th>\n",
+       "      <th>PHX</th>\n",
+       "      <th>Sandiego</th>\n",
+       "      <th>SanFran</th>\n",
+       "      <th>Seattle</th>\n",
+       "      <th>Total</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>Alaska</td>\n",
+       "      <td>On Time</td>\n",
+       "      <td>497</td>\n",
+       "      <td>221</td>\n",
+       "      <td>212</td>\n",
+       "      <td>503</td>\n",
+       "      <td>1841</td>\n",
+       "      <td>3274</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>Alaska</td>\n",
+       "      <td>Delayed</td>\n",
+       "      <td>62</td>\n",
+       "      <td>12</td>\n",
+       "      <td>20</td>\n",
+       "      <td>102</td>\n",
+       "      <td>305</td>\n",
+       "      <td>501</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>AM West</td>\n",
+       "      <td>On Time</td>\n",
+       "      <td>694</td>\n",
+       "      <td>4840</td>\n",
+       "      <td>383</td>\n",
+       "      <td>320</td>\n",
+       "      <td>201</td>\n",
+       "      <td>6438</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>AM West</td>\n",
+       "      <td>Delayed</td>\n",
+       "      <td>117</td>\n",
+       "      <td>415</td>\n",
+       "      <td>65</td>\n",
+       "      <td>129</td>\n",
+       "      <td>61</td>\n",
+       "      <td>787</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "   Airline   Status   LA   PHX  Sandiego  SanFran  Seattle  Total\n",
+       "0   Alaska  On Time  497   221       212      503     1841   3274\n",
+       "1   Alaska  Delayed   62    12        20      102      305    501\n",
+       "2  AM West  On Time  694  4840       383      320      201   6438\n",
+       "3  AM West  Delayed  117   415        65      129       61    787"
+      ]
+     },
+     "execution_count": 143,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "def addTotalCol():\n",
+    "    aOnTime = alaskaOnTime['LA':'Seattle'].sum()\n",
+    "    aDelayed = alaskaDelayed['LA':'Seattle'].sum()\n",
+    "    amOnTime = amwestOnTime['LA':'Seattle'].sum()\n",
+    "    amDelayed = amwestDelayed['LA':'Seattle'].sum()\n",
+    "    \n",
+    "    totalSeries = pd.Series([aOnTime, aDelayed, amOnTime, amDelayed])\n",
+    "    airliners['Total'] = totalSeries\n",
+    "    return airliners\n",
+    "\n",
+    "addTotalCol()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "In this cell we separate the rows by airline and perform a stasticial analysis on each. Using this data we can get a better general idea of the data."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 145,
+   "metadata": {
+    "collapsed": false,
+    "scrolled": true
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "              LA         PHX    Sandiego     SanFran      Seattle        Total\n",
+      "count    2.00000    2.000000    2.000000    2.000000     2.000000     2.000000\n",
+      "mean   279.50000  116.500000  116.000000  302.500000  1073.000000  1887.500000\n",
+      "std    307.59145  147.785317  135.764502  283.549819  1086.116016  1960.807104\n",
+      "min     62.00000   12.000000   20.000000  102.000000   305.000000   501.000000\n",
+      "25%    170.75000   64.250000   68.000000  202.250000   689.000000  1194.250000\n",
+      "50%    279.50000  116.500000  116.000000  302.500000  1073.000000  1887.500000\n",
+      "75%    388.25000  168.750000  164.000000  402.750000  1457.000000  2580.750000\n",
+      "max    497.00000  221.000000  212.000000  503.000000  1841.000000  3274.000000\n",
+      "               LA          PHX    Sandiego     SanFran     Seattle       Total\n",
+      "count    2.000000     2.000000    2.000000    2.000000    2.000000     2.00000\n",
+      "mean   405.500000  2627.500000  224.000000  224.500000  131.000000  3612.50000\n",
+      "std    408.000613  3128.947507  224.859956  135.057395   98.994949  3995.86042\n",
+      "min    117.000000   415.000000   65.000000  129.000000   61.000000   787.00000\n",
+      "25%    261.250000  1521.250000  144.500000  176.750000   96.000000  2199.75000\n",
+      "50%    405.500000  2627.500000  224.000000  224.500000  131.000000  3612.50000\n",
+      "75%    549.750000  3733.750000  303.500000  272.250000  166.000000  5025.25000\n",
+      "max    694.000000  4840.000000  383.000000  320.000000  201.000000  6438.00000\n"
+     ]
+    }
+   ],
+   "source": [
+    "print(airliners.loc[0:1].describe())\n",
+    "print(airliners.loc[2:3].describe())"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "In this cell we compare the percent of flights that were delayed for each airline. Overal Alaska Airlines had a slightly higher percent of delayed flights."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 146,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "13.271523178807948% of all Alaska flights were delayed\n",
+      "10.892733564013842% of all Am West flights were delayed\n"
+     ]
+    }
+   ],
+   "source": [
+    "alaskaRatio = (airliners['Total'][1] / (airliners['Total'][1] + airliners['Total'][0])) * 100\n",
+    "amWestRatio = (airliners['Total'][3] / (airliners['Total'][3] + airliners['Total'][2])) * 100\n",
+    "\n",
+    "print('{}% of all Alaska flights were delayed'.format(alaskaRatio))\n",
+    "print('{}% of all Am West flights were delayed'.format(amWestRatio))"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "In this cell we obtain the percent of delayed flights for each city, regardless of airline. The city with the highest percent of delayed flights was San Francisco. The city with the lowest was Phoenix."
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 162,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "The percent of flights delayed at LA airports was 13.065693430656935.\n",
+      "The percent of flights delayed at Phoenix airports was 7.780612244897959.\n",
+      "The percent of flights delayed at San Diego airports was 12.5.\n",
+      "The percent of flights delayed at San Francisco airports was 21.916508538899432.\n",
+      "The percent of flights delayed at Seattle airports was 15.199335548172757.\n"
+     ]
+    }
+   ],
+   "source": [
+    "LA = airliners['LA']\n",
+    "PHX = airliners['PHX']\n",
+    "SD = airliners['Sandiego']\n",
+    "SF = airliners['SanFran']\n",
+    "SE = airliners['Seattle']\n",
+    "\n",
+    "cityList = []\n",
+    "\n",
+    "for i in range(5):\n",
+    "    if i == 0:\n",
+    "        delayedLA = LA[1] + LA[3]\n",
+    "        onTimeLA = LA[0] + LA[2]\n",
+    "        totalLA = delayedLA + onTimeLA\n",
+    "        pDelayedLA = (delayedLA / totalLA) * 100\n",
+    "        print(\"The percent of flights delayed at LA airports was {}.\".format(pDelayedLA))\n",
+    "    elif i == 1:\n",
+    "        delayedPHX = PHX[1] + PHX[3]\n",
+    "        onTimePHX = PHX[0] + PHX[2]\n",
+    "        totalPHX = delayedPHX + onTimePHX\n",
+    "        pDelayedPHX = (delayedPHX / totalPHX) * 100\n",
+    "        print(\"The percent of flights delayed at Phoenix airports was {}.\".format(pDelayedPHX))\n",
+    "    elif i == 2:\n",
+    "        delayedSD = SD[1] + SD[3]\n",
+    "        onTimeSD = SD[0] + SD[2]\n",
+    "        totalSD = delayedSD + onTimeSD\n",
+    "        pDelayedSD = (delayedSD / totalSD) * 100\n",
+    "        print(\"The percent of flights delayed at San Diego airports was {}.\".format(pDelayedSD))\n",
+    "    elif i == 3:\n",
+    "        delayedSF = SF[1] + SF[3]\n",
+    "        onTimeSF = SF[0] + SF[2]\n",
+    "        totalSF = delayedSF + onTimeSF\n",
+    "        pDelayedSF = (delayedSF / totalSF) * 100\n",
+    "        print(\"The percent of flights delayed at San Francisco airports was {}.\".format(pDelayedSF))\n",
+    "    elif i == 4:\n",
+    "        delayedSE = SE[1] + SE[3]\n",
+    "        onTimeSE = SE[0] + SE[2]\n",
+    "        totalSE = delayedSE + onTimeSE\n",
+    "        pDelayedSE = (delayedSE / totalSE) * 100\n",
+    "        print(\"The percent of flights delayed at Seattle airports was {}.\".format(pDelayedSE))\n"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.5.2"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
